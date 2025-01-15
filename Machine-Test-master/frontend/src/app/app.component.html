@@ -1,0 +1,81 @@
+<form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)" class="row w-50 container mx-auto">
+  <!-- Product Name -->
+  <div class="mb-3 col">
+    <label for="productName" class="form-label">Product Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="productName"
+      [(ngModel)]="productName"
+      name="productName"
+      required
+    />
+  </div>
+
+  <!-- Product Category -->
+  <div class="mb-3 col">
+    <label for="categorySelect" class="form-label">Category</label>
+    <select
+      class="form-select"
+      id="categorySelect"
+      [(ngModel)]="selectedCategory"
+      name="selectedCategory"
+      required
+    >
+      <option value="" disabled selected>Select the Category</option>
+      <option *ngFor="let category of categories" [value]="category.CategoryName">
+        {{ category.CategoryName }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Buttons -->
+  <div class="row justify-content-center">
+    <button type="submit" class="btn btn-primary w-25 mx-3">Submit</button>
+    <button type="button" class="btn btn-success w-25 mx-3" (click)="onUpdateProduct(productForm)" [disabled]="editingProductId === null">Update Product</button>
+  </div>
+</form>
+
+<!-- Product Table -->
+<table class="table table-dark my-3">
+  <thead>
+    <tr class="table-active">
+      <th scope="col">Sr.No</th>
+      <th scope="col">ProductID</th>
+      <th scope="col">ProductName</th>
+      <th scope="col">CategoryID</th>
+      <th scope="col">CategoryName</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of products; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ product.ProductId }}</td>
+      <td>{{ product.ProductName }}</td>
+      <td>{{ product.categoryId }}</td>
+      <td>{{ product.ProductCategory }}</td>
+      <td>
+        <button type="button" (click)="editProduct(product.ProductId)" class="btn btn-outline-warning btn-sm mx-2">Edit</button>
+        <button type="button" (click)="deleteProduct(product.ProductId)" class="btn btn-outline-danger btn-sm mx-2">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <a class="page-link" (click)="onPageChange(currentPage - 1)" href="javascript:void(0);">Previous</a>
+    </li>
+    <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+      <li class="page-item" [class.active]="currentPage === i + 1">
+        <a class="page-link" (click)="onPageChange(i + 1)" href="javascript:void(0);">{{ i + 1 }}</a>
+      </li>
+    </ng-container>
+    <li class="page-item" [class.disabled]="currentPage === totalPages">
+      <a class="page-link" (click)="onPageChange(currentPage + 1)" href="javascript:void(0);">Next</a>
+    </li>
+  </ul>
+</nav>
